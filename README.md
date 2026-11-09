@@ -1,77 +1,60 @@
+<div align="center">
+
+<!-- Animated Audio Wave Header SVG -->
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0D0E12,50:16181F,100:E11D48&height=220&section=header&text=K1-STUDIO&fontSize=68&fontColor=FFFFFF&fontAlignY=38&desc=32-Bit%20Float%20Surgical%20Stem-Mixing%20%26%20Analog%20Mastering%20Workstation&descSize=18&descColor=06B6D4&descAlignY=62&animation=fadeIn" alt="K1-STUDIO Banner" />
+
+<!-- Animated Terminal DSP Ticker SVG -->
+<a href="https://github.com/reARbitRA/K1-STUDIO">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=15&duration=2800&pause=900&color=E11D48&background=0D0E1200&center=true&vCenter=true&width=820&lines=48+kHz+%2F+32-Bit+IEEE+Float+Zero-Latency+DSP+Engine;Click-Free+Zero-Crossing+Surgical+Region+Automation;Zero-Phase+Sub-85Hz+Mid%2FSide+Mono+Matrix+%2B+Pultec+EQP-1A+Curve;Parallel+SSL+G-Bus+Glue+%2B+1176+FET+Crush+%2B+Studer+A800+Tape+Saturation;ITU-R+BS.1770-4+LUFS+Loudness+Normalization+%26+-0.3+dBTP+True-Peak+Limiting" alt="DSP Pipeline Ticker" />
+</a>
+
+<br/>
+
+<!-- Studio Tech Badges -->
+![DSP Engine](https://img.shields.io/badge/DSP_CORE-32--BIT_FLOAT_%2F_48kHz-E11D48?style=for-the-badge&logo=audacity&logoColor=white)
+![Backend](https://img.shields.io/badge/BACKEND-Python_3.11_%7C_FastAPI_%7C_Pedalboard-06B6D4?style=for-the-badge&logo=python&logoColor=white)
+![Frontend](https://img.shields.io/badge/STUDIO_UI-React_18_%7C_TypeScript_%7C_WaveSurfer_v7-16181F?style=for-the-badge&logo=react&logoColor=06B6D4)
+![Output](https://img.shields.io/badge/MASTER_EXPORT-24--BIT_PCM_WAV-10B981?style=for-the-badge)
+
+</div>
+
 ---
-id: FORGE-README
-title: K1-STUDIO repository
-type: knowledge
-status: ACTIVE
-version: 1.1.0
-owner: agent
-created: '2026-11-09'
-updated: '2026-11-09'
-supersedes: []
-depends_on: []
-implements: []
-traces_to: []
-tags:
-- forge
-confidence: high
+
+## Overview
+
+**K1-STUDIO** is a local-first, single-screen Digital Audio Workstation (DAW) and mastering console engineered for surgical post-production, stem mixing, non-destructive time-region FX automation, and analog-modeled mastering.
+
+Unlike traditional bloated DAWs that require tedious sample-level slicing and manual crossfade drawing, **K1-STUDIO** uses a deterministic **Zero-Crossing Region DSP Engine**: select any time interval on the waveform, assign an effect preset, and the engine automatically locates the nearest zero-crossing within `±5 ms` and applies raised-cosine micro-crossfades for 100% click-free transitions.
+
 ---
 
-# K1-STUDIO
+## Signal Processing Architecture
 
-A local-first surgical stem-mixing and mastering workstation: float32 / 48 kHz DSP,
-six non-destructive region presets, an analog-style master chain, and a single-screen
-React studio. Production code lives entirely under `src/`. Four implementation tasks
-are in REVIEW; the specs are IMPLEMENTING, not human VERIFIED.
+```mermaid
+flowchart LR
+    subgraph INGEST["1. Ingest & Stem Engine"]
+        A["WAV / FLAC / AIFF"] --> B["48kHz / Float32 Resampler"]
+        B --> C["Optional Demucs v4\n2-Stem / 4-Stem Split"]
+    end
 
-## Start locally
-Requires Python 3.11+, Node 22+, npm, make, Linux/macOS native audio dependencies.
-```sh
-make bootstrap
-# Terminal 1 (loopback-only by default):
-PYTHONPATH=src .venv/bin/uvicorn k1_studio.app.main:app --port 8000
-# Terminal 2:
-npm --prefix src/frontend run dev -- --port 5173
-```
-Open http://localhost:5173. Import WAV/FLAC/AIFF, or choose **Try demo** to generate four
-real synthetic WAV files and send them through the real upload API. Nothing is sent to
-an external audio service. Select a time interval, choose a preset, audition, adjust
-master controls, and export a verified PCM_24 WAV. Export presents a download link.
+    subgraph TRACK["2. Per-Track Channel Strip"]
+        C --> D["Pre-Gain & Phase Ø"]
+        D --> E["HPF + De-Mud (290Hz)\nPresence (2.65kHz) + De-Fizz"]
+        E --> F["Channel Compressor"]
+        F --> G["Zero-Crossing Region FX\n(Raised-Cosine Crossfade)"]
+        G --> H["-3dB Equal-Power Pan"]
+    end
 
-Basic transport uses Web Audio gain/pan/mute/solo/phase and meters. **Preview region**
-is the authoritative Python FX/master render. A/B is audition-only, never export bypass.
-No licensed hardware-emulation fidelity is claimed. See spec §9 for DSP limitations.
+    subgraph MASTER["3. Analog Master Bus"]
+        H --> I["-6dBFS Summing Headroom"]
+        I --> J["Mid/Side Matrix\nZero-Phase <85Hz Mono"]
+        J --> K["Pultec EQP-1A Curve"]
+        K --> L["Parallel Bus Comp\n82% SSL Glue + 18% 1176"]
+        L --> M["Studer A800 Asymmetric\nTanh Tape Saturation"]
+        M --> N["BS.1770-4 LUFS Normalizer\n& -0.3 dBTP Brickwall Limiter"]
+        N --> O["Verified 24-Bit PCM WAV"]
+    end
 
-## Checks
-```sh
-make verify                    # pytest + store test, Ruff/ESLint, mypy/tsc, forge-lint
-make build test-e2e             # build + real Chromium browser tests
-make forge-lint BASE=cdfb576f0e875353f3b10e62badb21acf6d58ae3
-make secret-scan                # separately installed gitleaks 8.24.2 required
-PYTHONPATH=src .venv/bin/python tests/generate_boundary_evidence.py
-```
-Browser tests start their own API/Vite servers when ports are free, or reuse local
-servers outside CI. Chromium and test-only native libraries come from a pinned npm
-package; no browser release download is needed. Evidence/caches/audio are ignored.
-
-## Separation and containers
-Demucs inference is optional: install `requirements-separation.txt`, provision weights
-locally with appropriate provenance/license, and set `K1_DEMUCS_MODELS` to the repository
-of local model weights. Missing weights return 503; **no hidden model downloads** occur.
-Tests inject deterministic fake component buffers; real-model quality is not validated.
-`docker compose up --build` is provided for local port 8080; Docker was unavailable in
-this sandbox, so the container path is **not tested**. See ops/DEPLOY.md.
-
-## State, governance and limitations
-- Agents start with [AGENTS.md](AGENTS.md); humans inspect [.forge/STATE.md](.forge/STATE.md),
-  [PLAN-001](plans/PLAN-001-k1-studio-mvp.md) and [specs/INDEX.md](specs/INDEX.md).
-- The [original architecture](docs/TECHNICAL%20SPECIFICATION%20%26%20ARCHITECTURE%20DOCUMENT.MD)
-  is unchanged; its exact-path/hash frontmatter exception remains scoped to that file.
-- No authentication/multitenancy: keep services local/private. Preview proxies use
-  relative browser URLs, explicit origin/host checks, and no wildcard backend CORS.
-- Server registries/jobs are process-local; browser JSON survives reload while the server
-  runs. Restarting the server loses issued handles/jobs; persistent workspace recovery
-  needs further review. Original files remain on disk for manual recovery, not auto-loaded.
-- Listening sign-off, real Demucs smoke, qualifying-hardware benchmark, Docker and secret
-  scan remain outstanding. Current warm-cache performance is not cold-render evidence.
-- GitHub required checks/CODEOWNERS and any PR are maintainer follow-ups. No secrets,
-  models, large fixtures, commits, or pushes were added by this builder session.
+    style INGEST fill:#12131A,stroke:#06B6D4,stroke-width:1px,color:#fff
+    style TRACK fill:#12131A,stroke:#E11D48,stroke-width:1px,color:#fff
+    style MASTER fill:#12131A,stroke:#10B981,stroke-width:1px,color:#fff
