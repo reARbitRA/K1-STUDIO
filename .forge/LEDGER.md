@@ -154,3 +154,24 @@ Read quality/AC-EVIDENCE.md and task review notes. Independent reviewer should a
 rule and broaden acceptance where needed, not infer semantic completeness from test names.
 Keep four tasks REVIEW until DoD/PR/review evidence exists; humans own VERIFIED. Preserve
 this branch; push/open PR only on authorization. No credentials/remotes/settings changed.
+
+## 2026-11-09T12:40:10Z · session forge-pr-004 · agent Arena · HEAD 1d47a55 → following handoff commit
+**Authorization:** Human requested opening a PR for this branch; commit/push and PR creation
+are now authorized. No merge or task/spec verification authorized.
+**Did:** Checked branch/status and existing PRs, reviewed staged paths/size and ignore
+boundaries, reran local verification, committed all accumulated scaffold/spec/MVP changes
+as `1d47a553303c734d5952caf286a7883223ae0a7a`, and pushed only arena/a68eb821-k1-studio. Opened PR #1 against main:
+https://github.com/reARbitRA/K1-STUDIO/pull/1
+PR body follows the template and includes actual command results, trace IDs and limitations.
+**Verification:** `make verify` exit 0: 87 pytest passed (one upstream warning), Vitest 1
+passed, Ruff/ESLint clean, strict mypy 16 files and TypeScript clean, forge-lint PASS.
+`make build test-e2e` exit 0: build succeeds, Chromium 3 passed (15.3s).
+`make forge-lint BASE=cdfb576f0e875353f3b10e62badb21acf6d58ae3` and staged whitespace
+checks exit 0. No ignored audio/model/environment/generated binary paths staged.
+**Handoff:** STATE/TRACE now link the real implementation commit and PR; ledger appended
+without changing previous bytes. Final handoff commit follows this implementation HEAD
+so no self-referential commit hash is fabricated. T-001–T-004 remain REVIEW and specs
+IMPLEMENTING. CI/secret scan, listening, real models, qualifying-hardware benchmark,
+manual acceptance and Docker remain unverified; see PR and quality/AC-EVIDENCE.md.
+No credentials/remotes/protection changed. Reviewer should inspect PR #1 and actual CI
+results; do not infer DONE/VERIFIED or merge readiness from PR creation.

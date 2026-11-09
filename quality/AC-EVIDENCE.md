@@ -68,4 +68,5 @@ release-asset download was blocked by sandbox egress. CI scanning is configured,
 Docker is unavailable here. Server handle/job registries are process-local, so browser
 reload works during a server session but server restart requires re-importing assets.
 No public/multiuser deployment, durable queue, full coverage percentage, CI success,
-PR, or human VERIFIED product status is claimed. All four tasks remain REVIEW.
+or human VERIFIED product status is claimed. PR [#1](https://github.com/reARbitRA/K1-STUDIO/pull/1) is open; CI results are
+not asserted here. All four tasks remain REVIEW.

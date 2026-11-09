@@ -3,7 +3,7 @@ id: FORGE-STATE
 title: Current session snapshot
 type: state
 status: ACTIVE
-version: 1.2.0
+version: 1.2.1
 owner: pair
 created: '2026-11-09'
 updated: '2026-11-09'
@@ -16,7 +16,7 @@ tags:
 confidence: high
 ---
 
-# STATE — 2026-11-09T12:33:18Z · session forge-builder-003 · HEAD cdfb576 (working tree)
+# STATE — 2026-11-09T12:40:10Z · session forge-pr-004 · HEAD 1d47a55 (before handoff commit)
 
 ## Milestone / progress
 Four implementation tasks submitted to REVIEW in order T-001→T-002→T-003→T-004;
@@ -42,7 +42,9 @@ No test skip/xfail added; one upstream Starlette/AnyIO deprecation warning remai
 
 ## In progress / review
 No DOING tasks. All four cards are in tasks/REVIEW/. Independent reviewer must audit
-implementation breadth against each rule, not merely count test names. No PR/commit exists.
+implementation breadth against each rule, not merely count test names.
+PR #1: https://github.com/reARbitRA/K1-STUDIO/pull/1
+Implementation commit: 1d47a553303c734d5952caf286a7883223ae0a7a. PR opened against main; CI pending, not asserted green.
 A live Vite preview runs on 5173 with API on 8000, both bound for the Arena environment.
 
 ## Blocked / not yet verified
@@ -57,12 +59,14 @@ A live Vite preview runs on 5173 with API on 8000, both bound for the Arena envi
 ## Next up
 1. Independent REVIEWER audits T-001–T-004 and expands tests/manual acceptance where needed.
 2. Run real-model smoke and listening, verify Docker and benchmark on qualifying hardware.
-3. Provision gitleaks/run CI. On request, commit/push same Arena branch and open a PR
-   with actual evidence; only human moves specs to VERIFIED after deployed exercise.
+3. Review PR #1 and inspect CI, including secret-scan. Only a human moves specs to
+   VERIFIED after deployed acceptance; opening the PR does not complete the tasks.
 4. Address persistence/recovery needs through an approved revision before broadening scope.
 
 ## Environment / infra changes
 Pinned Python runtime/test deps and npm workspace/lockfile; optional separation requirements;
 Node 22 now needed by bootstrap. Added K1_WORKSPACE/K1_DEMUCS_MODELS/K1_ALLOWED_HOSTS
 and browser-test env notes in ops/ENV.md. Audio, browser binaries and evidence are ignored.
-No credentials, remotes, GitHub protection, cloud resources, branch name, commit or push changed.
+The human authorized commit/push/PR creation in this session. The implementation commit
+and final handoff are published only on arena/a68eb821-k1-studio. No credentials, remotes,
+GitHub protection, cloud resources or branch name changed.
