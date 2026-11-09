@@ -1,0 +1,5 @@
+# Optional; large CPU/GPU runtime. No weights are bundled or fetched by the app.
+-r requirements.txt
+demucs==4.0.1
+torch==2.7.1
+torchaudio==2.7.1

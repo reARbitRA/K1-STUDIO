@@ -1,0 +1,19 @@
+# SPEC-004
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/Dockerfile.api
+    volumes:
+      - audio-workspace:/workspace
+    # No public backend port; the frontend proxies HTTP and WS.
+  studio:
+    build:
+      context: .
+      dockerfile: src/frontend/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - api
+volumes:
+  audio-workspace:

@@ -1,0 +1,9 @@
+# Methodology tooling only; no product dependencies.
+PyYAML==6.0.2
+ruff==0.11.13
+mypy==1.15.0
+
+types-PyYAML==6.0.12.20250516
+-r requirements.txt
+pytest==8.3.5
+httpx==0.28.1

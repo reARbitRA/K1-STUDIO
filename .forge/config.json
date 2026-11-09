@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "markdown_exemptions": {
+    "docs/TECHNICAL SPECIFICATION & ARCHITECTURE DOCUMENT.MD": {
+      "reason": "Pre-existing architecture reference, preserved unchanged. Migrate only with human authorization.",
+      "sha256": "8662b5b3c345f51605b0cb044d05e4b3efd6faca08974a869f60e6941f7c9bf6"
+    }
+  }
+}

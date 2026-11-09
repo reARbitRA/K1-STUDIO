@@ -1,0 +1,86 @@
+name: Quality gates
+
+on:
+  pull_request:
+  push:
+    branches: [main, 'arena/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: ${{ matrix.check }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        check: [test, lint, typecheck, forge-lint]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: make bootstrap
+      - name: Verify
+        env:
+          CHECK: ${{ matrix.check }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$CHECK" = forge-lint ] && [ -n "$BASE_SHA" ]; then
+            make forge-lint BASE="$BASE_SHA"
+          else
+            make "$CHECK"
+          fi
+
+  secret-scan:
+    name: secret-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Install checksum-verified gitleaks
+        env:
+          VERSION: '8.24.2'
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          cd "$tmp"
+          archive="gitleaks_${VERSION}_linux_x64.tar.gz"
+          url="https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}"
+          curl --fail --silent --show-error --location --output "$archive" "$url/$archive"
+          curl --fail --silent --show-error --location --output checksums.txt "$url/gitleaks_${VERSION}_checksums.txt"
+          grep "  ${archive}$" checksums.txt > selected-checksum.txt
+          sha256sum --check selected-checksum.txt
+          tar -xzf "$archive" gitleaks
+          mkdir -p "$HOME/.local/bin"
+          install -m 755 gitleaks "$HOME/.local/bin/gitleaks"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+      - run: make secret-scan
+
+  browser:
+    name: browser
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: make bootstrap
+      - run: make build test-e2e

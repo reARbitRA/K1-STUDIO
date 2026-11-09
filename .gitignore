@@ -1,0 +1,25 @@
+# Local environments, caches, verification artifacts
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+coverage/
+.verification/
+# Never store credentials or private keys here
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_*
+*_ed25519*
+.forge-keys/
+# Product/build artifacts
+node_modules/
+dist/
+build/
+.workspace/
+playwright-report/
+test-results/
