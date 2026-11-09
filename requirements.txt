@@ -1,0 +1,8 @@
+numpy==2.2.6
+scipy==1.15.3
+pedalboard==0.9.17
+soundfile==0.13.1
+pyloudnorm==0.1.1
+fastapi==0.115.12
+uvicorn==0.34.3
+python-multipart==0.0.20

@@ -1,0 +1,9 @@
+.git
+.venv
+**/node_modules
+**/dist
+.workspace
+.verification
+**/test-results
+.env
+.env.*

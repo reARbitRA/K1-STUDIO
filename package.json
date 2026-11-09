@@ -1,0 +1,21 @@
+{
+  "name": "k1-studio-workspace",
+  "private": true,
+  "workspaces": [
+    "src/frontend"
+  ],
+  "scripts": {
+    "test": "npm --workspace k1-studio run test -- --run",
+    "lint": "npm --workspace k1-studio run lint",
+    "typecheck": "npm --workspace k1-studio run typecheck",
+    "build": "npm --workspace k1-studio run build"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.52.0",
+    "eslint": "9.28.0",
+    "jsdom": "26.1.0",
+    "typescript-eslint": "8.33.1",
+    "vitest": "3.2.3"
+  },
+  "type": "module"
+}
